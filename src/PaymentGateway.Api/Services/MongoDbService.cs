@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+
 using MongoDB.Driver;
 
 using PaymentGateway.Api.Models;
@@ -6,15 +7,32 @@ using PaymentGateway.Api.Settings;
 
 namespace PaymentGateway.Api.Services;
 
-public class MongoDbService
+public class MongoDbService : IMongoDbService
 {
-    private MongoClient client;
-    private IMongoDatabase database;
-    public MongoDbService(IOptions<MongoDBSettings> mongoDBSettings)
+    private readonly IMongoCollection<Payment> _paymentCollection;
+
+    public MongoDbService(IOptions<MongoDBSettings> mongoDbSettings)
     {
-        client = new MongoClient(mongoDBSettings.Value.ConnectionURI);
-        database = client.GetDatabase(mongoDBSettings.Value.DatabaseName);
+        MongoClient client = new(mongoDbSettings.Value.ConnectionURI);
+        IMongoDatabase database = client.GetDatabase(mongoDbSettings.Value.DatabaseName);
+        _paymentCollection = database.GetCollection<Payment>("Payment");
     }
 
-    public async Task<Currency> GetCurrencies(string code) => await database.GetCollection<Currency>("Currencies").FindAsync(x => x.CC == code).Result;
+
+    public async Task<string> Add(Payment payment)
+    {
+        await _paymentCollection.InsertOneAsync(payment);
+        return payment.Id;
+    }
+
+    public Task<Payment> Get(string id)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public interface IMongoDbService
+{
+    public Task<string> Add(Payment payment);
+    public Task<Payment> Get(string id);
 }

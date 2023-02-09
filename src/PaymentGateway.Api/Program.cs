@@ -1,16 +1,18 @@
 using PaymentGateway.Api.Services;
 using PaymentGateway.Api.Settings;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("MongoDB"));
-builder.Services.AddSingleton<MongoDbService>();
+builder.Services.Configure<BankSimulatorSettings>(builder.Configuration.GetSection("BankSimulator"));
+builder.Services.AddScoped<IMongoDbService, MongoDbService>();
+builder.Services.AddScoped<IBankService, BankService>();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {

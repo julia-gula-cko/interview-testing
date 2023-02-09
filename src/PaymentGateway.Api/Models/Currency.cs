@@ -1,15 +1,8 @@
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+namespace PaymentGateway.Api.Models;
 
-namespace PaymentGateway.Api.Models
+public enum Currency
 {
-    public class Currency
-    {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string? Id { get; set; }
-        public string CC { get; set; }
-        public string Symbol { get; set; }
-        public string Name { get; set; }
-    }
+    USD = 1,
+    PLN = 2,
+    EUR = 3,
 }

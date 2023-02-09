@@ -1,13 +1,20 @@
 using FluentValidation;
 
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace PaymentGateway.Api.Models;
 
 public class Payment
 {
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; }
+
     public string CardNumber { get; set; }
     public int ExpiryMonth { get; set; }
     public int ExpiryYear { get; set; }
-    public int Currency { get; set; }
+    public string Currency { get; set; }
     public decimal Amount { get; set; }
     public int CVV { get; set; }
 }
@@ -28,6 +35,6 @@ public class PaymentValidator : AbstractValidator<Payment>
             .Must(x => Convert.ToInt32(x) >= DateTime.Now.Month)
             .WithMessage("The credit card expiry month is invalid")
             .When(f => Convert.ToInt32(f.ExpiryYear) == DateTime.Now.Year);
-        RuleFor(x => x.Currency).NotEmpty();
+        RuleFor(x => x.Currency).IsEnumName(typeof(Currency), caseSensitive: false);
     }
 }
