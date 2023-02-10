@@ -14,7 +14,7 @@ public class BankRequest
     public string Currency { get; set; }
 
     [JsonPropertyName("amount")]
-    public int Amount { get; set; }
+    public string? Amount { get; set; }
 
     [JsonPropertyName("cvv")]
     public int CVV { get; set; }

@@ -1,3 +1,4 @@
+using PaymentGateway.Api;
 using PaymentGateway.Api.Services;
 using PaymentGateway.Api.Settings;
 
@@ -11,6 +12,8 @@ builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("Mo
 builder.Services.Configure<BankSimulatorSettings>(builder.Configuration.GetSection("BankSimulator"));
 builder.Services.AddScoped<IMongoDbService, MongoDbService>();
 builder.Services.AddScoped<IBankService, BankService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddHttpClient();
 
 WebApplication app = builder.Build();
 

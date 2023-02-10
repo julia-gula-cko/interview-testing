@@ -1,5 +1,7 @@
 using System.Text;
 
+using Microsoft.Extensions.Options;
+
 using MongoDB.Bson;
 
 using Newtonsoft.Json;
@@ -12,13 +14,14 @@ namespace PaymentGateway.Api.Services;
 public class BankService : IBankService
 {
     private readonly HttpClient _client;
-    private readonly BankSimulatorSettings _bankSimulatorSettings;
+    private readonly IOptions<BankSimulatorSettings> _bankSimulatorSettings;
     private readonly Uri _uri;
 
-    public BankService(HttpClient client)
+    public BankService(IOptions<BankSimulatorSettings> bankSimulatorSettings)
     {
+        _bankSimulatorSettings = bankSimulatorSettings;
         _client = new HttpClient();
-        _uri = new Uri(_bankSimulatorSettings.URL);
+        _uri = new Uri(_bankSimulatorSettings.Value.URL);
     }
 
     public async Task<BankResponse> AuthorizePayment(BankRequest payment)

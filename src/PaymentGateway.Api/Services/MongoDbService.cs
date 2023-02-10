@@ -25,9 +25,17 @@ public class MongoDbService : IMongoDbService
         return payment.Id;
     }
 
-    public Task<Payment> Get(string id)
+    public async Task<Payment> Get(string id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var result = await _paymentCollection.FindAsync(x => x.Id == id);
+            return result.Current.First();
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
     }
 }
 
