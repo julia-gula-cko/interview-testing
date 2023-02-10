@@ -1,8 +1,11 @@
+using Newtonsoft.Json;
+
 namespace PaymentGateway.Api.Models;
 
 public class Response
 {
-    public Status Status { get; set; }
+    [JsonProperty]
+    public string Status { get; set; }
 }
 
 public class InvalidResponse : Response

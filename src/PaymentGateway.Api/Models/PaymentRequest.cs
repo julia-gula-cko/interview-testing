@@ -20,7 +20,7 @@ public class PaymentValidator : AbstractValidator<PaymentRequest>
         RuleFor(p => p.ExpiryYear)
             .NotEmpty()
             .WithMessage("Credit card expiry year is required")
-            .Must(x => Convert.ToInt32(x) >= DateTime.Now.Year)
+            .Must(x => x >= DateTime.Now.Year)
             .WithMessage("The credit card expiry year is invalid");
         RuleFor(p => p.ExpiryMonth)
             .NotEmpty()

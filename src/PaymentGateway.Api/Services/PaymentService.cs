@@ -18,11 +18,11 @@ public class PaymentService : IPaymentService
     {
         BankRequest bankRequest = new()
         {
-            CardNumber = paymentRequest.CardNumber,
-            ExpiryDate = $"{paymentRequest.ExpiryMonth.ToString()}/{paymentRequest.ExpiryYear.ToString()}",
-            Currency = paymentRequest.Amount.ToString(),
-            Amount = AmountConverter(paymentRequest.Amount).ToString(),
-            CVV = paymentRequest.CVV,
+            card_number = paymentRequest.CardNumber,
+            expiry_date = $"0{paymentRequest.ExpiryMonth.ToString()}/{paymentRequest.ExpiryYear.ToString()}",
+            currency = paymentRequest.Currency,
+            amount = decimal.ToInt32(paymentRequest.Amount),
+            cvv = paymentRequest.CVV,
         };
 
         BankResponse bankResult = await _bankService.AuthorizePayment(bankRequest);
@@ -44,7 +44,7 @@ public class PaymentService : IPaymentService
             Task<string> id = _mongoDbService.Add(payment);
             return new PaymentResponse
             {
-                Status = payment.Status,
+                Status = payment.Status.ToString(),
                 Card = payment.CardNumber.Substring(payment.CardNumber.Length - 4),
                 Month = payment.ExpiryMonth,
                 Year = payment.ExpiryYear,
@@ -53,7 +53,7 @@ public class PaymentService : IPaymentService
             };
         }
 
-        InvalidResponse invalidResponse = new InvalidResponse {Status = Status.Declined, Errors = null};
+        InvalidResponse invalidResponse = new InvalidResponse {Status = Status.Declined.ToString(), Errors = null};
         return invalidResponse;
     }
 
@@ -65,7 +65,7 @@ public class PaymentService : IPaymentService
             PaymentResponse paymentResponse = new()
             {
                 Id = result.Id,
-                Status = result.Status,
+                Status = result.Status.ToString(),
                 Card = result.CardNumber.Substring(result.CardNumber.Length - 4),
                 Month = result.ExpiryMonth,
                 Year = result.ExpiryYear,

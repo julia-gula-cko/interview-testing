@@ -4,7 +4,7 @@ using PaymentGateway.Api.Models;
 
 namespace PaymentGateway.Api.Controllers;
 
-[Controller]
+[ApiController]
 public class PaymentController:Controller
 {
     private readonly IPaymentService _paymentService;
@@ -16,8 +16,13 @@ public class PaymentController:Controller
     }
 
     [HttpPost]
+    [Route("")]
     public async Task<IActionResult> CreatePayment([FromBody] PaymentRequest payment)
     {
+        if (payment == null)
+        {
+            return new BadRequestObjectResult("Request is null");
+        }
         var modelState = await _paymentValidator.ValidateAsync(payment);
         if (!modelState.IsValid)
         {
@@ -26,7 +31,7 @@ public class PaymentController:Controller
 
         var result = await _paymentService.CreatePayment(payment);
         
-        if (result.Status== Status.Authorized)
+        if (result.Status== "Authorized")
         {
             return new OkObjectResult(result);
         }

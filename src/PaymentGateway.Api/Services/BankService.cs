@@ -27,7 +27,7 @@ public class BankService : IBankService
     public async Task<BankResponse> AuthorizePayment(BankRequest payment)
     {
         string? json = payment.ToJson();
-        StringContent data = new StringContent(json, Encoding.UTF8, "application/json");
+        HttpContent data =  JsonContent.Create(json);
         HttpResponseMessage response = await _client.PostAsync(_uri, data);
         return JsonConvert.DeserializeObject<BankResponse>(response.Content.ReadAsStringAsync().Result);
     }
